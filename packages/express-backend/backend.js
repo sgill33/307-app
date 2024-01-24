@@ -1,5 +1,6 @@
 import express from "express";
 
+//constants
 const app = express();
 const port = 8000;
 
@@ -35,10 +36,12 @@ const users = {
 
 app.use(express.json());
 
+//default endpoint
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+//name search
 const findUserByName = (name) => {
     return users["users_list"].filter(
       (user) => user["name"] === name
@@ -56,6 +59,7 @@ const findUserByName = (name) => {
     }
   });
 
+// id search
 const findUserById = (id) =>
     users["users_list"].find((user) => user["id"] === id);
 
@@ -69,18 +73,55 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
-
+// add user
 const addUser = (user) => {
     users["users_list"].push(user);
     return user;
   };
   
-  app.post("/users", (req, res) => {
-    const userToAdd = req.body;
-    addUser(userToAdd);
-    res.send();
+app.post("/users", (req, res) => {
+const userToAdd = req.body;
+addUser(userToAdd);
+res.send();
+});
+
+// delete user by id
+
+app.delete("/users/:id",(req,res) => {
+    const id = req.params["id"]; //or req.params.id
+    let result = findUserById(id);
+    if (result === undefined) {
+        res.status(404).send("Resource not found.");
+      } else {
+        const idx = users["users_list"].indexOf(result);
+        users["users_list"].splice(idx,idx);
+        res.send()
+      }
+
+});
+
+// name and job search
+
+const findUserByNameAndJob = (name,job) => {
+    return users["users_list"].filter(
+      (user) => user["name"] === name
+    ).filter((user) => user["job"] === job);
+  };
+  
+  app.get("/users", (req, res) => {
+    const name = req.query.name;
+    const job = req.query.job;
+
+    if (name != undefined && job != undefined) {
+      let result = findUserByNameAndJob(name,job);
+      result = { users_list: result };
+      res.send(result);
+    } else {
+      res.send(users);      
+    }
   });
 
+// port selection
 app.listen(port, () => {
   console.log(
     `Example app listening at http://localhost:${port}`
