@@ -80,7 +80,7 @@ app.delete("/users/:id",(req,res) => {
       } else {
         const idx = users["users_list"].indexOf(result);
         users["users_list"].splice(idx,idx);
-        res.send()
+        res.status(204).send()
       }
 
 });
