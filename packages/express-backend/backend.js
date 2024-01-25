@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 //constants
 const app = express();
@@ -24,7 +25,7 @@ const users = {
       {
         id: "yat999",
         name: "Dee",
-        job: "Aspring actress"
+        job: "Aspiring actress"
       },
       {
         id: "zap555",
@@ -34,6 +35,7 @@ const users = {
     ]
   };
 
+app.use(cors());
 app.use(express.json());
 
 //default endpoint
