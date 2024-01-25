@@ -20,16 +20,17 @@ function MyApp() {
     }
 
     function removeOneCharacter(index) {
-      const updated = characters.filter((character, i) => {
-        return i !== index;
-      });
+      let updated = characters.filter(
+        (character) => character.id !== characters[index].id
+      );
 
       deleteUser(characters[index])
       .then((res) => {
-        if (res.status !== 201)
-        throw new Error("Not Removed!");
+        if (res.status !== 204)
+          throw new Error("Not Removed!");
+        return res.json()
       })
-      .then( () => setCharacters(updated))
+      .then(setCharacters(updated))
       .catch((error) => {
         console.log(error);
       })
@@ -39,9 +40,10 @@ function MyApp() {
       postUser(person)
       .then((res) => {
           if (res.status !== 201)
-          throw new Error("Not Added!");
+            throw new Error("Not Added!");
+          return res.json()
         })
-        .then(() => setCharacters([...characters, person]))
+        .then((json) => setCharacters([...characters, json]))
         .catch((error) => {
           console.log(error);
         })

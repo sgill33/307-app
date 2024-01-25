@@ -59,7 +59,7 @@ app.get("/users/:id", (req, res) => {
 
 // add user
 const addUser = (user) => {
-    user.id = Math.random(1000)
+    user.id = String(Math.random(1000))
     users["users_list"].push(user);
     return user;
   };
